@@ -44,6 +44,24 @@ namespace TS4
             leadStepper->startMoveTo(leadStepper->target, 0, std::abs(leadStepper->vMax), leadStepper->acc );              // start lead stepper
         }
 
+        /**
+         * @brief Starts a continuous synchronized rotation for all steppers in the group.
+         * 
+         * This method rotates all steppers in the group at their respective maximum speeds (vMax).
+         * The lead stepper is chosen based on the slowest maximum speed, ensuring all other steppers
+         * synchronize their motion proportionally. This is ideal for continuous motion without
+         * predefined target positions.
+         * 
+         * @note This function is non-blocking. The steppers will continue rotating until explicitly stopped.
+         * 
+         * Example usage:
+         * @code
+         * StepperGroup g1{motor1, motor2};
+         * motor1.setMaxSpeed(1000);
+         * motor2.setMaxSpeed(500);
+         * g1.startRotate();
+         * @endcode
+         */
         void startRotate()
         {
             if (steppers.empty()) return;

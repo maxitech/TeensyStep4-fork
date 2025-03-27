@@ -40,7 +40,26 @@ namespace TS4
         void clear() { steppers.clear(); }
 
 
-
+        /**
+         * @brief Starts a synchronized absolute movement for all steppers in the group.
+         * 
+         * This method moves all steppers in the group to their specified target positions,
+         * ensuring they finish their movements simultaneously. The lead stepper is chosen
+         * based on the largest movement required, and all other steppers are synchronized
+         * using the Bresenham algorithm.
+         * 
+         * @note This function is blocking. The program will wait until all steppers
+         *       have reached their target positions before continuing.
+         * 
+         * Example usage:
+         * @code
+         * StepperGroup g1{motor1, motor2, motor3};
+         * motor1.setTargetAbs(1000);
+         * motor2.setTargetAbs(2000);
+         * motor3.setTargetAbs(500);
+         * g1.move();
+         * @endcode
+         */
         void move()
         {
             startMove(); // start movement in the background
