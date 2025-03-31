@@ -36,7 +36,7 @@ namespace TS4
             stpTimer = TimerFactory::makeTimer();
             stpTimer->setPulseParams(8, stepPin);
             stpTimer->attachCallbacks([this] { rotISR(); }, [this] { resetISR(); });
-            v_sqr = vDir * 200 * 200;
+            v_sqr = vDir * 100 * 100;
             mode  = mode_t::rotate;
             stpTimer->start();
             isMoving = true;
@@ -106,12 +106,23 @@ namespace TS4
     }
 
     void StepperBase::emergencyStop()
-    {
-        stpTimer->stop();
-        TimerFactory::returnTimer(stpTimer);
-        stpTimer = nullptr;
+    {   
+        noInterrupts();
+        if (stpTimer != nullptr)
+        {
+            stpTimer->stop();
+            TimerFactory::returnTimer(stpTimer);
+            stpTimer = nullptr;
+        }
         isMoving = false;
         v_sqr    = 0;
+        interrupts();
+
+        // stpTimer->stop();
+        // TimerFactory::returnTimer(stpTimer);
+        // stpTimer = nullptr;
+        // isMoving = false;
+        // v_sqr    = 0;
     }
 
     void StepperBase::overrideSpeed(float factor)
